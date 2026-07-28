@@ -18,54 +18,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const buttons = [...document.querySelectorAll('.learn-more')];
+  // Services two-panel logic
+  const layout = document.querySelector('.services-layout');
+  const panel = document.getElementById('servicePanel');
+  const panelContent = document.getElementById('panelContent');
+  const panelClose = panel ? panel.querySelector('.panel-close') : null;
+  const cards = [...document.querySelectorAll('.service-card[data-service]')];
 
-  function collapsePanel(button) {
-    const card = button.closest('.service-card');
-    const details = card.querySelector('.service-details');
-    if (!details) return;
+  if (!layout || !panel || !panelContent) return;
 
-    button.setAttribute('aria-expanded', 'false');
-    button.childNodes[0].nodeValue = 'Learn More ';
-    card.classList.remove('is-expanded');
+  let activeId = null;
 
-    details.style.maxHeight = details.scrollHeight + 'px';
-    requestAnimationFrame(() => {
-      details.style.maxHeight = '0';
-    });
+  function openService(id) {
+    const source = document.getElementById('detail-' + id);
+    if (!source) return;
+
+    cards.forEach((c) => c.setAttribute('aria-expanded', 'false'));
+    const card = cards.find((c) => c.dataset.service === id);
+    if (card) card.setAttribute('aria-expanded', 'true');
+
+    panelContent.innerHTML = source.innerHTML;
+    panel.hidden = false;
+    panel.style.animation = 'none';
+    panel.offsetHeight;
+    panel.style.animation = '';
+    layout.classList.add('panel-open');
+    activeId = id;
   }
 
-  function expandPanel(button) {
-    const card = button.closest('.service-card');
-    const details = card.querySelector('.service-details');
-    if (!details) return;
-
-    buttons.forEach((otherButton) => {
-      if (otherButton !== button && otherButton.getAttribute('aria-expanded') === 'true') {
-        collapsePanel(otherButton);
-      }
-    });
-
-    button.setAttribute('aria-expanded', 'true');
-    button.childNodes[0].nodeValue = 'Show Less ';
-    card.classList.add('is-expanded');
-
-    details.style.maxHeight = details.scrollHeight + 'px';
-
-    const onEnd = () => {
-      if (button.getAttribute('aria-expanded') === 'true') {
-        details.style.maxHeight = 'none';
-      }
-      details.removeEventListener('transitionend', onEnd);
-    };
-    details.addEventListener('transitionend', onEnd);
+  function closePanel() {
+    cards.forEach((c) => c.setAttribute('aria-expanded', 'false'));
+    panel.hidden = true;
+    layout.classList.remove('panel-open');
+    activeId = null;
   }
 
-  buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const isOpen = button.getAttribute('aria-expanded') === 'true';
-      if (isOpen) collapsePanel(button);
-      else expandPanel(button);
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      const id = card.dataset.service;
+      if (activeId === id) {
+        closePanel();
+      } else {
+        openService(id);
+      }
     });
   });
+
+  if (panelClose) {
+    panelClose.addEventListener('click', closePanel);
+  }
 });
