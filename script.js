@@ -1,21 +1,3 @@
 // Mobile navigation menu
-function toggleMenu() {
-  const navLinks = document.getElementById('navLinks');
-  const hamburger = document.querySelector('.nav-hamburger');
-
-  if (navLinks) navLinks.classList.toggle('open');
-  if (hamburger) hamburger.classList.toggle('open');
-}
-
-// Close the mobile menu after selecting a navigation link
-document.addEventListener('DOMContentLoaded', () => {
-  const navLinks = document.getElementById('navLinks');
-  const hamburger = document.querySelector('.nav-hamburger');
-
-  document.querySelectorAll('.nav-link, .nav-cta').forEach((link) => {
-    link.addEventListener('click', () => {
-      if (navLinks) navLinks.classList.remove('open');
-      if (hamburger) hamburger.classList.remove('open');
-    });
-  });
-});
+function toggleMenu(){const navLinks=document.getElementById('navLinks');const hamburger=document.querySelector('.nav-hamburger');if(navLinks)navLinks.classList.toggle('open');if(hamburger)hamburger.classList.toggle('open')}
+document.addEventListener('DOMContentLoaded',()=>{const navLinks=document.getElementById('navLinks');const hamburger=document.querySelector('.nav-hamburger');document.querySelectorAll('.nav-link,.nav-cta').forEach(link=>link.addEventListener('click',()=>{if(navLinks)navLinks.classList.remove('open');if(hamburger)hamburger.classList.remove('open')}));document.querySelectorAll('.learn-more[aria-controls]').forEach(button=>button.addEventListener('click',()=>{const panel=document.getElementById(button.getAttribute('aria-controls'));if(!panel)return;const open=button.getAttribute('aria-expanded')==='true';button.setAttribute('aria-expanded',String(!open));panel.hidden=open;button.childNodes[0].nodeValue=open?'Learn More ':'Show Less '}))});
